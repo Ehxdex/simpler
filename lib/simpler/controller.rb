@@ -1,4 +1,5 @@
 require_relative 'view'
+require 'rack'
 
 module Simpler
   class Controller
