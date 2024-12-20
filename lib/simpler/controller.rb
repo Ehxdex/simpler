@@ -17,6 +17,7 @@ module Simpler
       @request.env['simpler.action'] = action
 
       set_headers(:html)
+      # render plain: "Plain text"
       status 200
       send(action)
       write_response
@@ -41,15 +42,24 @@ module Simpler
     end
 
     def render_body
-      View.new(@request.env).render(binding)
+      if @request.env['simpler.plain_text']
+        @response['Content-Type'] = 'text/plain'
+        @request.env['simpler.plain_text']
+      else
+        View.new(@request.env).render(binding)
+      end
     end
 
     def params
       @request.params
     end
 
-    def render(template)
-      @request.env['simpler.template'] = template
+    def render(template = nil, plain: nil)
+      if plain
+        @request.env['simpler.plain_text'] = plain
+      else 
+        @request.env['simpler.template'] = template
+      end
     end
 
     def status(code)
