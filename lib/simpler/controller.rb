@@ -51,7 +51,7 @@ module Simpler
     end
 
     def params
-      @request.params
+      @request.params.merge(@request.env['simpler.route_params'])
     end
 
     def render(template = nil, plain: nil)

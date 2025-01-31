@@ -5,8 +5,10 @@
     <title>Index | Simpler application</title>
   </head>
   <body>
-    <h1>Simpler framework at work!</h1>
-
-    <p><%= @time %></p>
+    <h1>All tests:</h1>
+    
+    <% @tests.each do |test| %></p>
+      <p>Title: <%= test.title %> | Level: <%= test.level %></p>
+    <% end %>
   </body>
 </html>
