@@ -1,0 +1,16 @@
+
+    Request: GET /tests/
+    Handler: TestsController#index
+    Parameters: {}
+    Response: 200 OK [text/html] 
+    
+    Request: GET /tests/1
+    Handler: TestsController#show
+    Parameters: {:id=>"1"}
+    Response: 200 OK [text/html] 
+    
+    Request: GET /test/122
+    Handler: NilClass#
+    Parameters: 
+    Response: 404 Not Found [] 
+    

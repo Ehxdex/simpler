@@ -24,7 +24,11 @@ module Simpler
       def compare_paths(request_path)
         return false unless request_path.size == @path.size
 
-        @path.each_with_index { |part, index| part.start_with?(':') || @part == request_path[index] }
+        @path.each_index do |index|
+          if @path[index] != request_path[index]
+            return false unless @path[index].start_with?(':')
+          end
+        end
       end
 
       def add_params(request_path)
