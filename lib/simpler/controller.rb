@@ -1,4 +1,5 @@
 require_relative 'view'
+require 'rack'
 
 module Simpler
   class Controller
@@ -15,7 +16,9 @@ module Simpler
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
 
-      set_default_headers
+      set_headers(:html)
+      # render plain: "Plain text"
+      status 200
       send(action)
       write_response
 
@@ -28,8 +31,8 @@ module Simpler
       self.class.name.match('(?<name>.+)Controller')[:name].downcase
     end
 
-    def set_default_headers
-      @response['Content-Type'] = 'text/html'
+    def set_headers(header)
+      header == :html ? @response['Content-Type'] = 'text/html' : @response['Content-Type'] = 'text/plain'
     end
 
     def write_response
@@ -39,16 +42,28 @@ module Simpler
     end
 
     def render_body
-      View.new(@request.env).render(binding)
+      if @request.env['simpler.plain_text']
+        @response['Content-Type'] = 'text/plain'
+        @request.env['simpler.plain_text']
+      else
+        View.new(@request.env).render(binding)
+      end
     end
 
     def params
-      @request.params
+      @request.params.merge(@request.env['simpler.route_params'])
     end
 
-    def render(template)
-      @request.env['simpler.template'] = template
+    def render(template = nil, plain: nil)
+      if plain
+        @request.env['simpler.plain_text'] = plain
+      else 
+        @request.env['simpler.template'] = template
+      end
     end
 
+    def status(code)
+      @response.status = code
+    end
   end
 end
